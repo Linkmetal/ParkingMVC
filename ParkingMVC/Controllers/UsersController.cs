@@ -21,8 +21,16 @@ namespace ParkingMVC.Controllers
 
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
+            var users = from m in _context.User
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(s => s.username.Contains(searchString));
+            }
+
             return View(await _context.User.ToListAsync());
         }
 
