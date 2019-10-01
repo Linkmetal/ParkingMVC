@@ -28,7 +28,15 @@ namespace ParkingMVC
 
 		public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+			services.AddCors();
+			//services.AddCors(options => {
+			//	options.AddPolicy(MyAllowSpecificOrigins,
+			//	builder => {
+			//		builder.WithOrigins("localhost").AllowAnyHeader()
+			//								.AllowAnyMethod(); ;
+			//	});
+			//});
+			services.AddControllersWithViews();
             services.AddDbContext<MvcUserContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ParkingMVCContext")));
 
@@ -39,14 +47,7 @@ namespace ParkingMVC
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
-			services.AddCors(options =>
-			{
-				options.AddPolicy(MyAllowSpecificOrigins,
-				builder => {
-					builder.WithOrigins("localhost").AllowAnyHeader()
-											.AllowAnyMethod(); ;
-				});
-			});
+			
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +64,12 @@ namespace ParkingMVC
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+			app.UseCors(
+				options => options.WithOrigins("http://localhost:8100").AllowAnyMethod()
+																		.AllowAnyHeader()
+																		.AllowCredentials()
+			);
+			app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -76,7 +82,7 @@ namespace ParkingMVC
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-			app.UseCors(MyAllowSpecificOrigins);
+			//app.UseCors(MyAllowSpecificOrigins);
 			//app.UseCors();
 
 			//app.UseSwagger();
