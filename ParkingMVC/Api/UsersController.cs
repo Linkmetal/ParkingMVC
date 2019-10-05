@@ -43,6 +43,19 @@ namespace ParkingMVC.Api
             return user;
         }
 
+		// GET: api/Users/username?username=admin
+		[HttpGet("username")]
+		public async Task<ActionResult<User>> GetUserByUsername([FromQuery]string username) {
+
+			var user = _context.User.SingleOrDefault(user => user.username == username);
+
+			if(user == null) {
+				return NotFound();
+			}
+
+			return user;
+		}
+
 		// PUT: api/Users/5
 		// To protect from overposting attacks, please enable the specific properties you want to bind to, for
 		// more details see https://aka.ms/RazorPagesCRUD.

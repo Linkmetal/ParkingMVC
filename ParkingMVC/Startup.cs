@@ -65,7 +65,7 @@ namespace ParkingMVC
                 app.UseHsts();
             }
 			app.UseCors(
-				options => options.WithOrigins("http://localhost:8100").AllowAnyMethod()
+				options => options.WithOrigins("http://localhost:8100", "http://localhost").AllowAnyMethod()
 																		.AllowAnyHeader()
 																		.AllowCredentials()
 			);
